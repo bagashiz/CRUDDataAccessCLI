@@ -1,2 +1,4 @@
 .vscode/
 bin/
+*.csv
+*.sqlite
