@@ -23,7 +23,7 @@ public class CSVFile {
             file.createNewFile();
         }
 
-        this.writer = new BufferedWriter(new FileWriter(FILE_NAME));
+        this.writer = new BufferedWriter(new FileWriter(FILE_NAME, true));
         this.reader = new BufferedReader(new FileReader(FILE_NAME));
     }
 
@@ -46,6 +46,10 @@ public class CSVFile {
      * Writes lines of records to the CSV file.
      */
     public void save(List<String> lines) throws IOException {
+        // avoids duplicate records by reopening the file in write mode
+        writer.close();
+        writer = new BufferedWriter(new FileWriter(FILE_NAME, false));
+
         for (String line : lines) {
             writer.write(line);
             writer.newLine();
@@ -57,12 +61,8 @@ public class CSVFile {
     /**
      * Closes the reader and writer.
      */
-    public void close() {
-        try {
-            reader.close();
-            writer.close();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+    public void close() throws IOException {
+        reader.close();
+        writer.close();
     }
 }
