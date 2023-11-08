@@ -1,7 +1,7 @@
 package repository;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import entity.Task;
@@ -9,15 +9,16 @@ import storage.CSVFile;
 
 /**
  * CSVTaskRepository is a class that implements the TaskRepository interface
- * using a CSV file as the data source.
+ * using a CSV file as the data source. Tasks are stored in a LinkedList to
+ * ensure that IDs remain sequential when tasks are deleted.
  */
 public class CSVTaskRepository implements TaskRepository {
-    private List<Task> tasks;
+    private LinkedList<Task> tasks;
     private final CSVFile csvFile;
 
     public CSVTaskRepository(CSVFile csvFile) {
         this.csvFile = csvFile;
-        this.tasks = new ArrayList<>();
+        this.tasks = new LinkedList<>();
         List<String> taskStrings = null;
 
         try {
@@ -35,11 +36,11 @@ public class CSVTaskRepository implements TaskRepository {
     }
 
     /**
-     * Returns all tasks.
+     * Returns a copy of all tasks in a new LinkedList.
      */
     @Override
     public List<Task> getAllTasks() {
-        return this.tasks;
+        return new LinkedList<>(tasks);
     }
 
     /**
@@ -57,11 +58,11 @@ public class CSVTaskRepository implements TaskRepository {
     }
 
     /**
-     * Creates a new task.
+     * Creates a new task with a sequential ID.
      */
     @Override
     public Task createTask(String description) {
-        int id = tasks.size() + 1;
+        int id = tasks.isEmpty() ? 1 : tasks.getLast().getId() + 1;
         Task task = new Task(id, description);
         tasks.add(task);
 
@@ -89,9 +90,9 @@ public class CSVTaskRepository implements TaskRepository {
      */
     @Override
     public void deleteTask(int id) {
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).getId() == id) {
-                tasks.remove(i);
+        for (Task task : tasks) {
+            if (task.getId() == id) {
+                tasks.remove(task);
                 return;
             }
         }
@@ -102,7 +103,7 @@ public class CSVTaskRepository implements TaskRepository {
      */
     @Override
     public void close() {
-        List<String> taskStrings = new ArrayList<>();
+        List<String> taskStrings = new LinkedList<>();
         for (Task task : tasks) {
             taskStrings.add(convertToString(task));
         }
@@ -116,9 +117,7 @@ public class CSVTaskRepository implements TaskRepository {
     }
 
     /**
-     * Converts a task string to a Task object.
-     * 
-     * @example "1,Task description,true" -> Task object
+     * Converts a csv string to a task.
      */
     private Task convertToTask(String taskString) {
         String[] parts = taskString.split(",");
@@ -132,9 +131,7 @@ public class CSVTaskRepository implements TaskRepository {
     }
 
     /**
-     * Converts a Task object to a task string.
-     * 
-     * @example Task object -> "1,Task description,true"
+     * Converts a task to a csv string.
      */
     private String convertToString(Task task) {
         return task.getId() + "," + task.getDescription() + "," + task.isDone();
