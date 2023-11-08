@@ -84,6 +84,11 @@ public class TaskService {
             return;
         }
 
+        if (task.isDone()) {
+            System.out.println("Task is already done.");
+            return;
+        }
+
         Task updatedTask = repo.updateTask(task.getId(), task.getDescription(), true);
 
         System.out.println("Task marked as done: " + updatedTask);
@@ -101,6 +106,11 @@ public class TaskService {
 
         if (task == null) {
             System.out.println("Task not found.");
+            return;
+        }
+
+        if (!task.isDone()) {
+            System.out.println("Task is already undone.");
             return;
         }
 
