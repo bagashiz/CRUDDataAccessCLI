@@ -20,6 +20,14 @@ public class TaskService {
     }
 
     /**
+     * Displays the options.
+     */
+    public void options() {
+        System.out.printf(
+                "Options:\n1. Create task\n2. Read tasks\n3. Update task\n4. Mark as done\n5. Mark as undone\n6. Delete task\n7. View options\n8. Exit\n");
+    }
+
+    /**
      * Displays all tasks.
      */
     public void getAllTasks() {

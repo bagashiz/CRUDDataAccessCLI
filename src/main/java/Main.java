@@ -22,9 +22,9 @@ public class Main {
         TaskRepository repo = new CSVTaskRepository(csvFile);
         TaskService service = new TaskService(repo, scanner);
 
+        service.options();
+
         while (true) {
-            System.out.printf(
-                    "Options:\n1. Create task\n2. Read tasks\n3. Update task\n4. Mark as done\n5. Mark as undone\n6. Delete task\n7. Exit\n");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -61,11 +61,15 @@ public class Main {
                     System.out.println();
                     break;
                 case 7:
+                    service.options();
+                    break;
+                case 8:
                     System.out.println("Exiting the program.");
                     service.close();
                     System.exit(0);
                 default:
                     System.out.println("Invalid choice.");
+                    service.options();
             }
         }
     }
