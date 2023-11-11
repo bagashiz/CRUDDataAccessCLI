@@ -121,19 +121,31 @@ public class CSVTaskRepository implements TaskRepository {
      */
     private Task convertToTask(String taskString) {
         String[] parts = taskString.split(",");
-        if (parts.length == 3) {
-            int id = Integer.parseInt(parts[0]);
-            String description = parts[1];
-            boolean isDone = Boolean.parseBoolean(parts[2]);
-            return new Task(id, description, isDone);
+
+        int id = Integer.parseInt(parts[0]);
+        String description = parts[1];
+        boolean isDone = Boolean.parseBoolean(parts[parts.length - 1]);
+
+        // if there are commas in the description
+        if (parts.length > 3) {
+            // concatenate the description
+            for (int i = 2; i < parts.length - 1; i++) {
+                description += "," + parts[i];
+            }
         }
-        return null;
+
+        // remove the quotes from the description
+        if (description.startsWith("\"") && description.endsWith("\"")) {
+            description = description.substring(1, description.length() - 1);
+        }
+
+        return new Task(id, description, isDone);
     }
 
     /**
      * Converts a task to a csv string.
      */
     private String convertToString(Task task) {
-        return task.getId() + "," + task.getDescription() + "," + task.isDone();
+        return task.getId() + "," + "\"" + task.getDescription() + "\"," + task.isDone();
     }
 }
