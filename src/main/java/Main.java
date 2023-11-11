@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import repository.CSVTaskRepository;
@@ -25,9 +26,15 @@ public class Main {
         service.options();
 
         while (true) {
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = 0;
+
+            try {
+                System.out.print("Enter your choice: ");
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+            }
 
             switch (choice) {
                 case 1:
@@ -68,7 +75,8 @@ public class Main {
                     service.close();
                     System.exit(0);
                 default:
-                    System.out.println("Invalid choice.");
+                    System.err.println("Invalid input.");
+                    System.out.println();
                     service.options();
             }
         }
