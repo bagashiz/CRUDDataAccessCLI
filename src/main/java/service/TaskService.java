@@ -135,6 +135,13 @@ public class TaskService {
         int id = scanner.nextInt();
         scanner.nextLine();
 
+        Task task = repo.getTaskById(id);
+
+        if (task == null) {
+            System.out.println("Task not found.");
+            return;
+        }
+
         repo.deleteTask(id);
 
         System.out.println("Task deleted.");
