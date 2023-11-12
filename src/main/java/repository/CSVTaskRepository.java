@@ -13,15 +13,16 @@ import storage.CSVFile;
  * ensure that IDs remain sequential when tasks are deleted.
  */
 public class CSVTaskRepository implements TaskRepository {
-    private LinkedList<Task> tasks;
-    private final CSVFile csvFile;
+    private List<Task> tasks;
+    private CSVFile csvFile;
 
-    public CSVTaskRepository(CSVFile csvFile) {
-        this.csvFile = csvFile;
-        this.tasks = new LinkedList<>();
+    public CSVTaskRepository() {
         List<String> taskStrings = null;
 
         try {
+            this.csvFile = new CSVFile();
+            this.tasks = new LinkedList<>();
+
             taskStrings = csvFile.load();
         } catch (IOException e) {
             System.err.println(e.getMessage());

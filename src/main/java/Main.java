@@ -1,26 +1,38 @@
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import repository.CSVTaskRepository;
 import repository.TaskRepository;
+import repository.TaskRepositoryFactory;
 import service.TaskService;
-import storage.CSVFile;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        // initialize connection to CSV file
-        CSVFile csvFile = null;
+        System.out.println("====================");
+        System.out.println("Simple Todo List App");
+        System.out.println("====================");
+        System.out.println();
+
+        // choose storage type
+        int storageType = 0;
         try {
-            csvFile = new CSVFile();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+            System.out.printf("1. CSV\n2. SQLite\nChoose a storage type: ");
+            storageType = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println();
+        } catch (Exception e) {
+            System.err.println("Invalid input.");
+            System.exit(1);
         }
 
         // dependency injection
-        TaskRepository repo = new CSVTaskRepository(csvFile);
+        TaskRepository repo = TaskRepositoryFactory.getTaskRepository(storageType);
+        if (repo == null) {
+            System.err.println("Invalid storage type.");
+            System.exit(1);
+        }
+
         TaskService service = new TaskService(repo, scanner);
 
         service.options();
