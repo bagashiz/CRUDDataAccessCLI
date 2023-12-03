@@ -28,15 +28,14 @@ public class CSVDataStorage implements Storage<Data> {
             file.createNewFile();
         }
 
-        reader = new CSVReader(new FileReader(filePath));
-        writer = new CSVWriter(new FileWriter(filePath));
+        data = new ArrayList<>();
+        reader = new CSVReader(new FileReader(file));
 
         data = this.read();
     }
 
     @Override
     public List<Data> read() throws Exception {
-        List<Data> dataList = new ArrayList<>();
         List<String[]> rows = reader.readAll();
 
         for (String[] row : rows) {
@@ -46,10 +45,12 @@ public class CSVDataStorage implements Storage<Data> {
                     .flag(Boolean.parseBoolean(row[2]))
                     .build();
 
-            dataList.add(data);
+            this.data.add(data);
         }
 
-        return dataList;
+        reader.close();
+
+        return this.data;
     }
 
     @Override
@@ -92,6 +93,7 @@ public class CSVDataStorage implements Storage<Data> {
     }
 
     private void writeToFile() throws Exception {
+        writer = new CSVWriter(new FileWriter(file));
         List<String[]> records = new ArrayList<>();
 
         for (Data data : this.data) {
@@ -105,5 +107,9 @@ public class CSVDataStorage implements Storage<Data> {
         }
 
         writer.writeAll(records);
+        writer.flush();
+        writer.close();
+
+        writer = new CSVWriter(new FileWriter(file, true));
     }
 }

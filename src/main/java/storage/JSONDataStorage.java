@@ -1,7 +1,6 @@
 package storage;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,16 +30,16 @@ public class JSONDataStorage implements Storage<Data> {
 
     @Override
     public List<Data> read() throws Exception {
-        List<Data> data = new ArrayList<>();
         TypeReference<List<Data>> typeReference = new TypeReference<List<Data>>() {
         };
 
         try {
-            data = mapper.readValue(file, typeReference);
+            this.data = mapper.readValue(file, typeReference);
         } catch (MismatchedInputException e) {
             mapper.writeValue(file, data);
         }
-        return data;
+
+        return this.data;
     }
 
     @Override
