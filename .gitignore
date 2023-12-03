@@ -2,3 +2,4 @@
 bin/
 *.csv
 *.sqlite
+*.json
