@@ -20,6 +20,15 @@ public class Service {
     }
 
     /**
+     * Sets storage strategy
+     * 
+     * @param storage
+     */
+    public void setStorage(Storage<Data> storage) {
+        this.storage = storage;
+    }
+
+    /**
      * Displays the options.
      */
     public void options() {

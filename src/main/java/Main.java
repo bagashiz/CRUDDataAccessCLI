@@ -16,7 +16,9 @@ public class Main {
         System.out.println("=====================");
         System.out.println();
 
+        // dependency injection
         Storage<Data> storage = null;
+        Service service = new Service(storage, scanner);
 
         // choose storage type
         int storageType = 0;
@@ -27,19 +29,16 @@ public class Main {
 
             switch (storageType) {
                 case 1:
-                    storage = new CSVDataStorage("src/main/resources/data.csv");
+                    service.setStorage(new CSVDataStorage("src/main/resources/data.csv"));
                     break;
                 case 2:
-                    storage = new JSONDataStorage("src/main/resources/data.json");
+                    service.setStorage(new JSONDataStorage("src/main/resources/data.json"));
                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
-
-        // dependency injection
-        Service service = new Service(storage, scanner);
 
         service.options();
 
